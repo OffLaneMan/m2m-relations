@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class Article(models.Model):
@@ -20,6 +21,7 @@ class Article(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=256, verbose_name='Название')
+    # tagline = models.ManyToManyField(Article, through='Scope',related_name='tags_line')
 
     class Meta:
         verbose_name = 'Тэг'
@@ -38,5 +40,12 @@ class Scope(models.Model):
     is_main = models.BooleanField(default=False)
 
     class Meta:
+        verbose_name = 'Тематика статьи'
         verbose_name_plural = 'Тематика статьи'
         ordering = ['-is_main', 'tag']
+
+    # def save(self, *args, **kwargs):
+    #     if self.is_main:
+    #         if Scope.objects.filter(scope=self.scope, is_main=True).exists():
+    #             self.is_main = False
+    #     super().save(*args, **kwargs)
